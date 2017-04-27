@@ -1,7 +1,9 @@
 ﻿from flask import Flask, render_template, request, make_response
+from flask_cors import CORS, cross_origin
+
 from functools import wraps, update_wrapper
 from datetime import datetime
-
+from lmrs import LMRS
 import logging
 
 logger = logging.getLogger(__name__)
@@ -25,7 +27,8 @@ def nocache(view):
 #######################
 
 app = Flask(__name__, static_folder='static', static_url_path='')
-# app.config.from_object(os.environ['APP_SETTINGS'])
+
+CORS(app)
 
 
 ################
@@ -36,6 +39,10 @@ app = Flask(__name__, static_folder='static', static_url_path='')
 def index():
 	return render_template('index.html')
 
+
+@app.route('/lmrs/init', methods=['GET'])
+def init_lmrs():
+	return LMRS.init()
 
 if __name__ == '__main__':
 	app.run( host="0.0.0.0",	 port=int("8080")	 )
