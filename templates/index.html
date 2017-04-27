@@ -752,9 +752,26 @@
               </div>
 
 
+              <script>
+                // On mouse-over, execute myFunction
+                function goNextDay() {
+                  $.getJSON( "http://localhost:8080/lmrs/init", function( data ) {
+                      // var items = [];
+                      // $.each( data, function( key, val ) {
+                      //   items.push( "<li id='" + key + "'>" + val + "</li>" );
+                      // });
+                      //
+                      // $( "<ul/>", {
+                      //   "class": "my-new-list",
+                      //   html: items.join( "" )
+                      // }).appendTo( "body" );
+                      alert(data["state"])
+                    });
+                }
+              </script>
 
             <div class="box-footer">
-              <button type="submit" class="btn btn-primary">Run for the Next Day!</button>
+              <button id="nextDay" onclick="goNextDay()" class="btn btn-primary">Run for the Next Day!</button>
             </div>
 
           </section>
