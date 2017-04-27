@@ -93,3 +93,6 @@ env/
 
 #temp folder
 tmp/
+
+#Mac tmp folder
+.DS_Store
