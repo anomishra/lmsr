@@ -13,7 +13,7 @@ class Investor(object):
     def get_json(self):
         return {
             'id': self.id,
-            'budget': self.budget,
+            'budget': round (self.budget, 4),
             'DH_DS16': self.DH_DS16,
             'DH_RS16': self.DH_RS16,
             'RH_DS16': self.RH_DS16,

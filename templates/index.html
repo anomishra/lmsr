@@ -88,17 +88,16 @@
   <div class="modal-dialog">
 
     <!-- Modal content-->
-    <div class="modal-content">
+    <div class="modal-content" >
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <h3 class="panel-title">Market status</h3>
       </div>
       <div class="modal-body">
-        <form role="form" lpformnum="1">
             <div class="box-body">
               <div class="form-group">
                 <label for="exampleInputEmail1">Maker B parameter</label>
-                <input type="text" class="form-control" id="b_parameter" placeholder="Maker B parameter" autocomplete="off" value="500">
+                <input type="text" class="form-control" id="b_number" placeholder="Maker B parameter" autocomplete="off" value="500">
               </div>
 
               <div class="form-group">
@@ -106,10 +105,9 @@
                 <input type="text" class="form-control" id="investor_count" placeholder="Investor Count" autocomplete="off" value="10">
               </div>
             <div class="box-footer">
-              <button type="submit" class="btn btn-primary">Save</button>
+              <button type="submit" class="btn btn-primary" onclick="reconfigure()">Save</button>
             </div>
           </div>
-          </form>
       </div>
 
     </div>
@@ -142,49 +140,78 @@
             </div>
             <div class="panel-body"  >
 
-              <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                var table_content = "<thead>
+              <table id="marketDetails" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <th>Number</th>
+                        <th>Day</th>
+                        <th>Investor ID</th>
+                        <th>DH_DS16</th>
+                        <th>DH_RS16</th>
+                        <th>RH_DS16</th>
+                        <th>RH_RS16</th>
+                        <th>OTHER16</th>
+                        <th>Price</th>
                     </tr>
                 </thead>
                 <tfoot>
-                    <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
-                    </tr>
+                  <tr>
+                      <th>Number</th>
+                      <th>Day</th>
+                      <th>Investor ID</th>
+                      <th>DH_DS16</th>
+                      <th>DH_RS16</th>
+                      <th>RH_DS16</th>
+                      <th>RH_RS16</th>
+                      <th>OTHER16</th>
+                      <th>Price</th>
+                  </tr>
                 </tfoot>
-                <tbody>
-                    <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
-                    </tr>
-                    <tr>
-                        <td>Garrett Winters</td>
-                        <td>Accountant</td>
-                        <td>Tokyo</td>
-                        <td>63</td>
-                        <td>2011/07/25</td>
-                        <td>$170,750</td>
-                    </tr>
-                </tbody>"
+                <tbody id='order_details'>
+
+                </tbody>
               </table>
 
             </div>
           </div>
+
+          <!-- Details Marke -->
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Investor details</h3>
+              </div>
+              <div class="panel-body"  >
+
+                <table id="investorsDetails" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                  <thead>
+                      <tr>
+                          <th>Investor ID</th>
+                          <th>DH_DS16</th>
+                          <th>DH_RS16</th>
+                          <th>RH_DS16</th>
+                          <th>RH_RS16</th>
+                          <th>OTHER16</th>
+                          <th>budget</th>
+                      </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                          <th>Investor ID</th>
+                          <th>DH_DS16</th>
+                          <th>DH_RS16</th>
+                          <th>RH_DS16</th>
+                          <th>RH_RS16</th>
+                          <th>OTHER16</th>
+                          <th>Budget</th>
+                    </tr>
+                  </tfoot>
+                  <tbody id='order_details'>
+
+                  </tbody>
+                </table>
+
+              </div>
+            </div>
 
     </section>
 
@@ -315,7 +342,8 @@
     document.getElementById("legend").innerHTML = "";
     document.getElementById("legend").appendChild(legendHolder.firstChild)
     $(document).ready(function() {
-        $('#example').DataTable();
+        $('#marketDetails').DataTable();
+        $('#investorsDetails').DataTable();
     } );
 
   }
@@ -351,7 +379,38 @@
     chartData["datasets"][3]["data"] = data["history"]["RH_RS16"];
     chartData["datasets"][4]["data"] = data["history"]["OTHER16"];
 
+    // Market details
+    var datatable = $('#marketDetails').dataTable().api();
+    datatable.clear();
 
+    var orders = data["orders"];
+
+    for (var id in orders)
+    {
+      datatable.row.add([id, orders[id]["day"], orders[id]["investor_id"],  orders[id]["DH_DS16"],
+                          orders[id]["DH_RS16"] , orders[id]["RH_DS16"] , orders[id]["RH_RS16"] ,
+                          orders[id]["OTHER16"] , orders[id]["price"]   ]);
+    }
+    datatable.order([0, 'desc']).draw()
+
+    // Investor details
+    var datatable2 = $('#investorsDetails').dataTable().api();
+    datatable2.clear();
+
+    var investors = data["investors"];
+
+    for (var id in investors)
+    {
+      datatable2.row.add( [investors[id]["id"], investors[id]["DH_DS16"],
+                          investors[id]["DH_RS16"] , investors[id]["RH_DS16"] , investors[id]["RH_RS16"] ,
+                          investors[id]["OTHER16"] , investors[id]["budget"]   ]);
+    }
+
+
+    datatable2.draw()
+
+    $("#investor_count").val(data["investor_count"]);
+    $("#b_number").val(data["b_number"]);
 
     displayLineChart(chartData);
   };
@@ -363,8 +422,14 @@
       });
   }
 
+  function reconfigure(){
+    resetMarket();
+    $('#myModalSetting').modal('hide');
+  }
+
   function resetMarket(){
-    $.getJSON( "http://localhost:8080/lmrs/init", function( data ) {
+    var url = "http://localhost:8080/lmrs/init?investor_count=" + $("#investor_count").val() + "&b_number=" + $("#b_number").val()
+    $.getJSON( url, function( data ) {
       });
 
     $.getJSON( "http://localhost:8080/lmrs/info", function( data ) {

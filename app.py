@@ -42,17 +42,26 @@ def index():
 @app.route('/lmrs/init', methods=['GET'])
 def init_lmrs():
 	investor_count = request.args.get('investor_count')
+	print(investor_count)
+
 	if investor_count == None:
 		investor_count = 10
+	else:
+		investor_count = int(investor_count)
 
 	b_number = request.args.get('b_number')
 	if b_number == None:
 		b_number = 500
+	else:
+		b_number = int(b_number)
 
 	budget = request.args.get('budget')
 	if budget == None:
 		budget = 500
+	else:
+		budget = int(budget)
 
+	print(investor_count)
 	return LMRS.init(investor_count, b_number, budget)
 
 @app.route('/lmrs/info', methods=['GET'])

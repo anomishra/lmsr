@@ -159,6 +159,9 @@ class LMRS:
             info['orders'][i +1] = order.get_json()
 
         info['history'] = LMRS.attach_history()
+        
+        info['b_number'] = LMRS.b_number
+        info['investor_count'] = LMRS.investor_count
         return info
 
     @staticmethod
