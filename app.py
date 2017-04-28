@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template, request, make_response
+﻿from flask import Flask, render_template, request, make_response, jsonify
 from flask_cors import CORS, cross_origin
 
 from functools import wraps, update_wrapper
@@ -17,7 +17,6 @@ def nocache(view):
 		response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
 		response.headers['Pragma'] = 'no-cache'
 		response.headers['Expires'] = '-1'
-		print('asasas')
 		return response
 
 	return update_wrapper(no_cache, view)
@@ -42,7 +41,29 @@ def index():
 
 @app.route('/lmrs/init', methods=['GET'])
 def init_lmrs():
-	return LMRS.init()
+	investor_count = request.args.get('investor_count')
+	if investor_count == None:
+		investor_count = 10
+
+	b_number = request.args.get('b_number')
+	if b_number == None:
+		b_number = 500
+
+	budget = request.args.get('budget')
+	if budget == None:
+		budget = 500
+
+	return LMRS.init(investor_count, b_number, budget)
+
+@app.route('/lmrs/info', methods=['GET'])
+def get_market_info():
+	return jsonify(LMRS.gen_market_info())
+
+
+@app.route('/lmrs/next_day', methods=['GET'])
+def run_for_next_day():
+	return jsonify(LMRS.run_for_next_day())
+
 
 if __name__ == '__main__':
 	app.run( host="0.0.0.0",	 port=int("8080")	 )
