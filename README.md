@@ -1,4 +1,4 @@
-LMRS sample code
+LMSR sample code
 ======================
 
 Prediction Market demo using Hanson's Logarithmic Market Scoring Rule (LMSR) for this Market:
