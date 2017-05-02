@@ -33,6 +33,7 @@ CORS(app)
 ################
 #### routes ####
 ################
+@app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 @nocache
 def index():
