@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 
 from functools import wraps, update_wrapper
 from datetime import datetime
-from lmrs import LMRS
+from lmsr import LMSR
 import logging
 
 logger = logging.getLogger(__name__)
@@ -62,16 +62,16 @@ def init_lmrs():
 		budget = int(budget)
 
 	print(investor_count)
-	return LMRS.init(investor_count, b_number, budget)
+	return LMSR.init(investor_count, b_number, budget)
 
 @app.route('/lmrs/info', methods=['GET'])
 def get_market_info():
-	return jsonify(LMRS.gen_market_info())
+	return jsonify(LMSR.gen_market_info())
 
 
 @app.route('/lmrs/next_day', methods=['GET'])
 def run_for_next_day():
-	return jsonify(LMRS.run_for_next_day())
+	return jsonify(LMSR.run_for_next_day())
 
 
 if __name__ == '__main__':
